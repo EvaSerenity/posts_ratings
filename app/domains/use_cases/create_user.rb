@@ -1,22 +1,30 @@
-#module UseCase
-  class UseCases::CreateUser
-    include ActiveModel::Validations
+class UseCases::CreateUser
 
-    attr_accessor :login
+  attr_reader :user
 
-    validates_presence_of :login
+  delegate :errors, to: :user
 
-    def initialize(login)
-      @login = login
-    end
-
-    def perform
-      if valid?
-        User.find_or_create_by(login: @login)
-      else
-        self
-      end
-    end
-
+  def initialize(login)
+    @login = login
+    @success = false
   end
-#end
+
+  def success?
+    @success
+  end
+
+  def perform
+    @user = User.find_or_create_by(login: @login)
+    if @user.persisted?
+      success!
+    end
+    self
+  end
+
+  protected
+
+  def success!
+    @success = true
+  end
+
+end

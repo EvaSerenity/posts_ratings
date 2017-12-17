@@ -1,29 +1,38 @@
 class UseCases::CreateRating
-  include ActiveModel::Validations
 
-  attr_accessor :post_id, :value
+  attr_accessor :rating
 
-  validates_presence_of :post_id
-  validates_presence_of :value
+  delegate :errors, to: :rating
 
   def initialize(post_id, value)
     @post_id = post_id
     @value = value
+    @success = false
+  end
+
+  def success?
+    @success
   end
 
   def perform
-    if valid?
-      save_rating
-      update_post_average_rating
+    save_rating
+    update_post_average_rating
+    if @rating.persisted?
+      success!
     end
-
     self
+  end
+
+  protected
+
+  def success!
+    @success = true
   end
 
   private
 
   def save_rating
-    Rating.create(value: value.to_i, post_id: post_id)
+    @rating = Rating.create(value: value.to_i, post_id: post_id)
   end
 
   def update_post_average_rating

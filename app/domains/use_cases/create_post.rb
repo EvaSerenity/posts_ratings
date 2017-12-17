@@ -1,32 +1,33 @@
-#module UseCases
-  class UseCases::CreatePost
-    include ActiveModel::Validations
+class UseCases::CreatePost
 
-    attr_accessor :title, :content, :ip
+  attr_accessor :post
 
-    validates_presence_of :title
-    validates_presence_of :content
-    validates_presence_of :ip
+  delegate :errors, to: :post
 
-    def initialize(title, content, user, ip)
-      @title = title
-      @content = content
-      @user = user
-      @ip = ip
-    end
-
-    def perform
-      if @user.errors.empty?
-        if valid?
-          Post.create(title: @title, content: @content, user_ip: @ip, user_id: @user.id)
-        else
-          self
-        end
-      else
-        self.errors.messages[:user] = @user.errors.messages
-        self
-      end
-    end
-
+  def initialize(title, content, user, ip)
+    @title = title
+    @content = content
+    @user = user
+    @ip = ip
+    @success = false
   end
-#end
+
+  def success?
+    @success
+  end
+
+  def perform
+    @post = Post.create(title: @title, content: @content, user_ip: @ip, user_id: @user.id)
+    if @post.persisted?
+      success!
+    end
+    self
+  end
+
+  protected
+
+  def success!
+    @success = true
+  end
+
+end
