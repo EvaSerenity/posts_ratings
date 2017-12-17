@@ -18,7 +18,7 @@ class PostsController < ApplicationController
 
   def best
     posts = BestPostsQuery.new(params[:count]).best_posts
-    render json: posts
+    render json: posts.pluck(:title, :content)
   end
 
 end
