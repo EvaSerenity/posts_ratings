@@ -13,8 +13,8 @@ class PostsController < ApplicationController
   end
 
   def best
-    @posts = Post.all
-    render json: @posts
+    posts = BestPostsQuery.new(params[:count]).best_posts
+    render json: posts
   end
 
 end
