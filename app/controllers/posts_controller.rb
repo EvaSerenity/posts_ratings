@@ -9,10 +9,10 @@ class PostsController < ApplicationController
       if post_use_case.success?
         render json: post_use_case.post
       else
-        render status: 422, json: post_use_case.post.errors.messages
+        render status: 422, json: post_use_case.post.errors
       end
     else
-      render status: 422, json: user_use_case.user.errors.messages
+      render status: 422, json: user_use_case.user.errors
     end
   end
 
