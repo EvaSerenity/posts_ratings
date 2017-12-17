@@ -17,10 +17,6 @@ class UseCases::CreateRating
 
   def perform
     save_rating
-    update_post_average_rating
-    if @rating.persisted?
-      success!
-    end
     self
   end
 
@@ -37,11 +33,7 @@ class UseCases::CreateRating
   private
 
   def save_rating
-    @rating = Rating.create(value: @value.to_i, post_id: @post_id)
-  end
-
-  def update_post_average_rating
-    @post.update(avg_rating: (@post.avg_rating * (@post.ratings_count - 1) + @value.to_i) / @post.ratings_count)
+    RatePostWorker.perform_async(@post_id, @value)
   end
 
 end
