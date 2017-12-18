@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171216185602) do
+ActiveRecord::Schema.define(version: 20171217234517) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -24,6 +24,7 @@ ActiveRecord::Schema.define(version: 20171216185602) do
     t.integer "ratings_count", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["avg_rating"], name: "index_posts_on_avg_rating"
     t.index ["user_id"], name: "index_posts_on_user_id"
   end
 
