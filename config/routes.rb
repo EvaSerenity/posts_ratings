@@ -8,4 +8,6 @@ Rails.application.routes.draw do
     end
   end
 
+  get 'statistics/users_with_same_ips', to: 'statistics#same_ips'
+
 end
