@@ -4,7 +4,7 @@ class PostsController < ApplicationController
     user_use_case = UseCases::CreateUser.new(params[:login]).perform
     if user_use_case.success?
       post_use_case = UseCases::CreatePost
-          .new(params[:title], params[:content], user_use_case.user, params[:ip])
+          .new(params[:title], params[:content], user_use_case.user, params[:user_ip])
           .perform
       if post_use_case.success?
         render json: post_use_case.post
